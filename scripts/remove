@@ -1,0 +1,8 @@
+#!/bin/bash
+
+domain=$(sudo yunohost app setting camera domain)
+
+sudo rm /etc/nginx/conf.d/$domain.d/camera.conf
+
+sudo service nginx reload
+sudo yunohost app ssowatconf 

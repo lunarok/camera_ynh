@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Retrieve arguments
+domain=$1
+path=$2
+ip=$3
+
+sudo yunohost app checkurl $domain$path -a couchpotato
+if [[ ! $? -eq 0 ]]; then
+  exit 1
+fi
+
+# Remove trailing "/" for next commands
+path=${path%/}
+
+# Configure Nginx and reload
+sed -i "s@PATHTOCHANGE@$path@g" ../conf/nginx.conf
+sed -i "s@IPTOCHANGE@$ip@g" ../conf/nginx.conf
+sudo cp ../conf/nginx.conf /etc/nginx/conf.d/$domain.d/couchpotato.conf
+sudo service nginx reload
+echo $?
